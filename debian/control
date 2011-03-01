@@ -1,0 +1,28 @@
+Source: qmidiroute
+Section: sound
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+Uploaders: Jaromír Mikeš <mira.mikes@seznam.cz>,
+Build-Depends: debhelper (>= 7.0.50~),
+ autotools-dev (>= 20100122.1), 
+ pkg-config,
+ libjack-dev,
+ libqt4-dev,
+ libasound2-dev
+Standards-Version: 3.9.1
+Vcs-Git: git://git.debian.org/git/pkg-multimedia/qmidiroute.git
+Vcs-Browser: http://git.debian.org/?p=pkg-multimedia/qmidiroute.git
+Homepage: http://alsamodular.sourceforge.net/
+
+Package: qmidiroute
+Architecture: any
+Depends: ${shlibs:Depends},
+ ${misc:Depends}
+Description: a MIDI event router and filter
+ MIDI note, control change,program change and pitch bend events
+ are logged, and can be filtered, redirected and transformed
+ into other events according to MIDI maps defined as tabs
+ in the main control surface.
+ .
+ You can copy midi MAPS into new tabs using the 'Clone MIDI map' button.
+ All MIDI maps can be saved in a .qma text file. 

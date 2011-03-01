@@ -1,0 +1,25 @@
+Description: Fix hyphen-used-as-minus-sign problem in manpages
+Author: Jaromír Mike¨ <mira.mikes@seznam.cz>
+Forwarded: No
+Index: qmidiroute-0.3.0/man/de/qmidiroute.1
+===================================================================
+--- qmidiroute-0.3.0.orig/man/de/qmidiroute.1	2011-03-03 01:55:54.816269739 +0100
++++ qmidiroute-0.3.0/man/de/qmidiroute.1	2011-03-03 01:56:21.868271002 +0100
+@@ -8,7 +8,7 @@
+ .\"
+ .TH QMIDIROUTE 1 2009-09-13
+ .SH NAME
+-qmidiroute \- MIDI-Signalverarbeiter und -Router
++qmidiroute \- MIDI-Signalverarbeiter und \-Router
+ .SH SYNTAX
+ .br
+ .B qmidiroute 
+@@ -22,7 +22,7 @@
+ }
+ .SH BESCHREIBUNG
+ .B qmidiroute
+-ist ein vielseitiger MIDI-Signalverarbeiter und -Router für den ALSA
++ist ein vielseitiger MIDI-Signalverarbeiter und \-Router für den ALSA
+ Sequencer.  Die grafische Oberfläche basiert auf der Qt4 Bibliothek.
+ .B qmidiroute
+ erlaubt die Konfiguration einer beliebigen Anzahl von MIDI-Routen, in
