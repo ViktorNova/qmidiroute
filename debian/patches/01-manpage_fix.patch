@@ -1,10 +1,12 @@
 Description: Fix hyphen-used-as-minus-sign problem in manpages
 Author: Jaromír Mike¨ <mira.mikes@seznam.cz>
 Forwarded: No
-Index: qmidiroute-0.3.0/man/de/qmidiroute.1
-===================================================================
---- qmidiroute-0.3.0.orig/man/de/qmidiroute.1	2011-03-03 01:55:54.816269739 +0100
-+++ qmidiroute-0.3.0/man/de/qmidiroute.1	2011-03-03 01:56:21.868271002 +0100
+---
+ man/de/qmidiroute.1 |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- qmidiroute.orig/man/de/qmidiroute.1
++++ qmidiroute/man/de/qmidiroute.1
 @@ -8,7 +8,7 @@
  .\"
  .TH QMIDIROUTE 1 2009-09-13
@@ -14,7 +16,7 @@ Index: qmidiroute-0.3.0/man/de/qmidiroute.1
  .SH SYNTAX
  .br
  .B qmidiroute 
-@@ -22,7 +22,7 @@
+@@ -22,7 +22,7 @@ qmidiroute \- MIDI-Signalverarbeiter und
  }
  .SH BESCHREIBUNG
  .B qmidiroute
