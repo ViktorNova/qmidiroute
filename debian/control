@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
 Uploaders: Jaromír Mikeš <mira.mikes@seznam.cz>,
 Build-Depends: debhelper (>= 7.0.50~),
- autotools-dev (>= 20100122.1), 
+ dh-autoreconf,
  pkg-config,
  libjack-dev,
  libqt4-dev,
