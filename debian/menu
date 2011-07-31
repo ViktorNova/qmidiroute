@@ -1,0 +1,5 @@
+?package(qmidiroute):needs="X11"\
+ section="Applications/Sound"\
+ title="Qmidiroute"\
+ icon="/usr/share/pixmaps/qmidiroute_32x32.xpm"\
+ command="/usr/bin/qmidiroute"
