@@ -3,6 +3,7 @@ Type=Application
 Name=Qmidiroute
 GenericName=qmidiroute
 Comment=Midi Router
+Keywords=route;jackd;midi;
 Icon=qmidiroute_32x32
 TryExec=qmidiroute
 Exec=qmidiroute
