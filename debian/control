@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 9),
  libjack-dev,
  libqt4-dev,
  libasound2-dev
-Standards-Version: 3.9.1
+Standards-Version: 3.9.6
 Vcs-Git: git://git.debian.org/git/pkg-multimedia/qmidiroute.git
 Vcs-Browser: http://git.debian.org/?p=pkg-multimedia/qmidiroute.git
 Homepage: http://alsamodular.sourceforge.net/
