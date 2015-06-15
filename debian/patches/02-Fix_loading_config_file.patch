@@ -1,0 +1,19 @@
+Description: Fix loading config files
+Taken from ubuntu:
+https://bugs.launchpad.net/ubuntu/+source/qmidiroute/+bug/1455920
+https://launchpadlibrarian.net/206733370/7_6.diff
+Author: Jaromír Mikeš <mira.mikes@seznam.cz>
+Forwarded: No
+
+Index: qmidiroute/src/mapwidget.cpp
+===================================================================
+--- qmidiroute.orig/src/mapwidget.cpp
++++ qmidiroute/src/mapwidget.cpp
+@@ -523,6 +523,7 @@ void MapWidget::readMap(QTextStream& map
+     updateChOutMode(qs2.toInt());
+     qs2 = qs.section(' ', 1, 1); 
+     indexOutMode->setCurrentIndex(qs2.toInt());
++    updateIndexOutMode(qs2.toInt());
+     qs = mapText.readLine();
+     qs2 = qs.section(' ', 0, 0); 
+     portOut->setValue(qs2.toInt() + 1);
