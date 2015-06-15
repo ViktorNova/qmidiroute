@@ -10,15 +10,15 @@ Build-Depends: debhelper (>= 9),
  libqt4-dev,
  libasound2-dev
 Standards-Version: 3.9.6
-Vcs-Git: git://git.debian.org/git/pkg-multimedia/qmidiroute.git
-Vcs-Browser: http://git.debian.org/?p=pkg-multimedia/qmidiroute.git
+Vcs-Git: git://anonscm.debian.org/pkg-multimedia/qmidiroute.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-multimedia/qmidiroute.git
 Homepage: http://alsamodular.sourceforge.net/
 
 Package: qmidiroute
 Architecture: any
 Depends: ${shlibs:Depends},
  ${misc:Depends}
-Description: a MIDI event router and filter
+Description: MIDI event router and filter
  MIDI note, control change,program change and pitch bend events
  are logged, and can be filtered, redirected and transformed
  into other events according to MIDI maps defined as tabs
