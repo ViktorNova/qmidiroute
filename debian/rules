@@ -4,4 +4,4 @@
 LDFLAGS+=-Wl,--as-needed
 
 %:
-	dh $@ --with autoreconf
+	dh $@ --with autoreconf --parallel
