@@ -1,3 +1,9 @@
+qmidiroute (0.4.0-1) UNRELEASED; urgency=medium
+
+  * Imported Upstream version 0.4.0
+
+ -- Jaromír Mikeš <mira.mikes@seznam.cz>  Fri, 17 Jun 2016 02:04:27 +0200
+
 qmidiroute (0.3.0-2) unstable; urgency=medium
 
   * Set dh/compat 9.
