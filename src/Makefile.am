@@ -26,14 +26,15 @@ qmidiroute_SOURCES = \
 translationsdir = $(pkgdatadir)/translations
 translations = \
 	translations/qmidiroute_de.ts \
-	translations/qmidiroute_fr.ts
+	translations/qmidiroute_fr.ts \
+	translations/qmidiroute_ru.ts
 
 translations_DATA = \
 	translations/qmidiroute_de.qm \
-	translations/qmidiroute_fr.qm
+	translations/qmidiroute_fr.qm \
+	translations/qmidiroute_ru.qm
 
 
-AM_LDFLAGS = @QT_LIBS@ @DEFS@
 AM_CXXFLAGS = @QT_CXXFLAGS@
 DEFS = -Wall -Wextra -D_REENTRANT -DTRANSLATIONSDIR=\"$(translationsdir)\" @DEFS@
 

@@ -25,9 +25,10 @@ static const char ABOUTMSG[] = APP_NAME " " PACKAGE_VERSION "\n"
 
 class MainWindow : public QMainWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private:
+    static int sigpipe[2];
+
     QTabWidget *tabWidget;
     MapData *mapData;
     LogWidget *logWidget;
@@ -43,6 +44,8 @@ class MainWindow : public QMainWindow
     void removeMap(int);
     void addMap(const QString&);
     bool isModified();
+    bool installSignalHandlers();
+    static void handleSignal(int);
 
   protected:
     void closeEvent(QCloseEvent*);
@@ -68,6 +71,10 @@ class MainWindow : public QMainWindow
     void helpAbout();
     void helpAboutQt();
     void selectedTabChanged(int);
+
+  private slots:
+    void signalAction(int);
+
 };
   
 #endif

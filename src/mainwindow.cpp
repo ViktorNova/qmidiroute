@@ -5,11 +5,17 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QWidget>
+#include <QSocketNotifier>
 #include <QToolBar>
 #include <QToolButton>
 #include <QMenuBar>   
 #include <QMenu>
 #include <alsa/asoundlib.h>
+#include <cerrno>   // for errno
+#include <csignal>  // for sigaction()
+#include <cstring>  // for strerror()
+#include <unistd.h> // for pipe()
+
 
 #include "mapdata.h"
 #include "logwidget.h"
@@ -29,6 +35,8 @@
 
 static const char FILEEXT[] = ".qmr";
 
+
+int MainWindow::sigpipe[2];
 
 MainWindow::MainWindow(int p_portCount)
 {
@@ -53,54 +61,54 @@ MainWindow::MainWindow(int p_portCount)
     addDockWidget(Qt::BottomDockWidgetArea, logWindow);
 
     passWidget = new PassWidget(p_portCount, this);
-    tabWidget->insertTab(1, passWidget, tr("Unmatched"));
+    tabWidget->insertTab(1, passWidget, tr("&Unmatched"));
 
     QObject::connect(passWidget, SIGNAL(discardToggled(bool)), 
             mapData->seqDriver, SLOT(setDiscardUnmatched(bool)));
     QObject::connect(passWidget, SIGNAL(newPortUnmatched(int)), 
             mapData->seqDriver, SLOT(setPortUnmatched(int)));
 
-    mapNewAction = new QAction(QIcon(mapadd_xpm), tr("&New..."), this);
-    mapNewAction->setShortcut(QKeySequence(tr("Ctrl+N", "Map|New")));
-    mapNewAction->setToolTip(tr("Add new MIDI route"));
+    mapNewAction = new QAction(QPixmap(mapadd_xpm), tr("&New..."), this);
+    mapNewAction->setShortcut(QKeySequence(tr("Ctrl+N", "Rule|New")));
+    mapNewAction->setToolTip(tr("Add new rule"));
     connect(mapNewAction, SIGNAL(triggered()), this, SLOT(mapNew()));
 
-    mapCloneAction = new QAction(QIcon(mapclone_xpm), tr("&Clone"), this);
-    mapCloneAction->setShortcut(QKeySequence(tr("Ctrl+C", "Map|Clone")));
-    mapCloneAction->setToolTip(tr("Duplicate selected MIDI route"));
+    mapCloneAction = new QAction(QPixmap(mapclone_xpm), tr("&Clone"), this);
+    mapCloneAction->setShortcut(QKeySequence(tr("Ctrl+C", "Rule|Clone")));
+    mapCloneAction->setToolTip(tr("Duplicate selected rule"));
     connect(mapCloneAction, SIGNAL(triggered()), this, SLOT(mapClone()));
 
-    mapRenameAction = new QAction(QIcon(maprename_xpm), tr("&Rename..."), this);
-    mapRenameAction->setShortcut(QKeySequence(tr("Ctrl+R", "Map|Rename")));
-    mapRenameAction->setToolTip(tr("Rename selected MIDI route"));
+    mapRenameAction = new QAction(QPixmap(maprename_xpm), tr("&Rename..."), this);
+    mapRenameAction->setShortcut(QKeySequence(tr("Ctrl+R", "Rule|Rename")));
+    mapRenameAction->setToolTip(tr("Rename selected rule"));
     connect(mapRenameAction, SIGNAL(triggered()), this, SLOT(mapRename()));
 
-    mapDeleteAction = new QAction(QIcon(mapremove_xpm), tr("&Delete..."), this);
-    mapDeleteAction->setShortcut(QKeySequence(tr("Ctrl+Del", "Map|Delete")));
-    mapDeleteAction->setToolTip(tr("Delete selected MIDI route"));
+    mapDeleteAction = new QAction(QPixmap(mapremove_xpm), tr("&Delete..."), this);
+    mapDeleteAction->setShortcut(QKeySequence(tr("Ctrl+Del", "Rule|Delete")));
+    mapDeleteAction->setToolTip(tr("Delete selected rule"));
     connect(mapDeleteAction, SIGNAL(triggered()), this, SLOT(mapDelete()));
 
-    fileNewAction = new QAction(QIcon(filenew_xpm), tr("&New"), this);
+    fileNewAction = new QAction(QPixmap(filenew_xpm), tr("&New"), this);
     fileNewAction->setShortcut(QKeySequence(QKeySequence::New));    
     fileNewAction->setToolTip(tr("Create new MIDI route file"));
     connect(fileNewAction, SIGNAL(triggered()), this, SLOT(fileNew()));
 
-    fileOpenAction = new QAction(QIcon(fileopen_xpm), tr("&Open..."), this);
+    fileOpenAction = new QAction(QPixmap(fileopen_xpm), tr("&Open..."), this);
     fileOpenAction->setShortcut(QKeySequence(QKeySequence::Open));    
     fileOpenAction->setToolTip(tr("Open MIDI route file"));
     connect(fileOpenAction, SIGNAL(triggered()), this, SLOT(fileOpen()));
 
-    fileSaveAction = new QAction(QIcon(filesave_xpm), tr("&Save"), this);
+    fileSaveAction = new QAction(QPixmap(filesave_xpm), tr("&Save"), this);
     fileSaveAction->setShortcut(QKeySequence(QKeySequence::Save));    
     fileSaveAction->setToolTip(tr("Save current MIDI route file"));
     connect(fileSaveAction, SIGNAL(triggered()), this, SLOT(fileSave()));
 
-    fileSaveAsAction = new QAction(QIcon(filesaveas_xpm), tr("Save &as..."),
+    fileSaveAsAction = new QAction(QPixmap(filesaveas_xpm), tr("Save &as..."),
             this);
     fileSaveAsAction->setToolTip(tr("Save current MIDI route file with new name"));
     connect(fileSaveAsAction, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
 
-    fileQuitAction = new QAction(QIcon(filequit_xpm), tr("&Quit"), this);
+    fileQuitAction = new QAction(QPixmap(filequit_xpm), tr("&Quit"), this);
     fileQuitAction->setShortcut(QKeySequence(tr("Ctrl+Q", "File|Quit")));    
     fileQuitAction->setToolTip(tr("Quit application"));
     connect(fileQuitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -119,15 +127,15 @@ MainWindow::MainWindow(int p_portCount)
     viewLogAction->setToolTip(tr("Show/hide MIDI event log window"));
 
 
-    QMenuBar *menuBar = new QMenuBar; 
-    QMenu *fileMenu = new QMenu(tr("&File"), this); 
-    QMenu *viewMenu = new QMenu(tr("&View"), this); 
-    QMenu *mapMenu = new QMenu(tr("&Map"), this); 
+    QMenuBar *menuBar = new QMenuBar;
+    QMenu *fileMenu = new QMenu(tr("&File"), this);
+    QMenu *viewMenu = new QMenu(tr("&View"), this);
+    QMenu *mapMenu = new QMenu(tr("&Rule"), this);
     QMenu *helpMenu = new QMenu(tr("&Help"), this);
 
-    fileMenu->addAction(fileNewAction);    
-    fileMenu->addAction(fileOpenAction);    
-    fileMenu->addAction(fileSaveAction);    
+    fileMenu->addAction(fileNewAction);
+    fileMenu->addAction(fileOpenAction);
+    fileMenu->addAction(fileSaveAction);
     fileMenu->addAction(fileSaveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction(fileQuitAction);
@@ -172,6 +180,9 @@ MainWindow::MainWindow(int p_portCount)
     setWindowIcon(QPixmap(qmidiroute_48_xpm));
     updateWindowTitle();
 
+    if (!installSignalHandlers())
+        qWarning("%s", "Signal handlers not installed!");
+
     resize(520, 480);
     show();
 }
@@ -209,8 +220,8 @@ void MainWindow::mapNew()
     bool ok;
 
     name = QInputDialog::getText(this, APP_NAME,
-            tr("Add MIDI Map"), QLineEdit::Normal,
-            tr("Map %1").arg(mapData->midiMapCount() + 1), &ok);
+            tr("Add rule"), QLineEdit::Normal,
+            tr("Rule %1").arg(mapData->midiMapCount() + 1), &ok);
 
     if (ok && !name.isEmpty()) {
         MapWidget *mapWidget = new MapWidget(mapData->createMidiMap(),
@@ -253,19 +264,19 @@ void MainWindow::mapClone()
     cloneWidget->setTypeOut((int)mapWidget->getMidiMap()->typeOut);  
     cloneWidget->setChOutMode((int)mapWidget->getMidiMap()->chOutMode);
 
-	switch ((int)mapWidget->getMidiMap()->chOutMode)
-	{
-		case 2:
-		cloneWidget->setChOut(mapWidget->getMidiMap()->chOut + 1);
-		break;
-		case 1:
+    switch ((int)mapWidget->getMidiMap()->chOutMode)
+    {
+        case 2:
+        cloneWidget->setChOut(mapWidget->getMidiMap()->chOut + 1);
+        break;
+        case 1:
         cloneWidget->setChOut(mapWidget->getMidiMap()->chOut + 2);
-		break;
-		case 0:
+        break;
+        case 0:
         cloneWidget->setChOut(mapWidget->getMidiMap()->chOut);
-		break;
+        break;
     }
-	
+    
     cloneWidget->setIndexOutMode((int)mapWidget->getMidiMap()->indexOutMode);
     cloneWidget->setIndexOut(mapWidget->getMidiMap()->indexOut);
     cloneWidget->setPortOut(mapWidget->getMidiMap()->portOut + 1);
@@ -510,5 +521,75 @@ void MainWindow::closeEvent(QCloseEvent* e)
 bool MainWindow::isModified()
 {
     return mapData->isModified();
+}
+
+/* Handler for system signals (SIGUSR1, SIGINT...)
+ * Write a message to the pipe and leave as soon as possible
+ */
+void MainWindow::handleSignal(int sig)
+{
+    if (write(sigpipe[1], &sig, sizeof(sig)) == -1) {
+        qWarning("write() failed: %s", std::strerror(errno));
+    }
+}
+
+/* Install signal handlers (may be more than one; called from the
+ * constructor of your MainWindow class*/
+bool MainWindow::installSignalHandlers()
+{
+    /*install pipe to forward received system signals*/
+    if (pipe(sigpipe) < 0) {
+        qWarning("pipe() failed: %s", std::strerror(errno));
+        return false;
+    }
+
+    /*install notifier to handle pipe messages*/
+    QSocketNotifier* signalNotifier = new QSocketNotifier(sigpipe[0],
+            QSocketNotifier::Read, this);
+    connect(signalNotifier, SIGNAL(activated(int)),
+            this, SLOT(signalAction(int)));
+
+    /*install signal handlers*/
+    struct sigaction action;
+    memset(&action, 0, sizeof(action));
+    action.sa_handler = handleSignal;
+
+    if (sigaction(SIGUSR1, &action, NULL) == -1) {
+        qWarning("sigaction() failed: %s", std::strerror(errno));
+        return false;
+    }
+
+    if (sigaction(SIGINT, &action, NULL) == -1) {
+        qWarning("sigaction() failed: %s", std::strerror(errno));
+        return false;
+    }
+
+    return true;
+}
+
+/* Slot to give response to the incoming pipe message;
+   e.g.: save current file */
+void MainWindow::signalAction(int fd)
+{
+    int message;
+
+    if (read(fd, &message, sizeof(message)) == -1) {
+        qWarning("read() failed: %s", std::strerror(errno));
+        return;
+    }
+    
+    switch (message) {
+        case SIGUSR1:
+            fileSave();
+            break;
+
+        case SIGINT:
+            close();
+            break;
+
+        default:
+            qWarning("Unexpected signal received: %d", message);
+            break;
+    }
 }
 
