@@ -1,6 +1,13 @@
-qmidiroute (0.4.0-1) UNRELEASED; urgency=medium
+qmidiroute (0.4.0-1) unstable; urgency=medium
 
   * Imported Upstream version 0.4.0
+  * Add .gitignore file.
+  * Remove obsolete patch.
+  * Remove menu file.
+  * Bump Standards.
+  * Fix VCS fields.
+  * Switch to qt5.
+  * Fix some hardening.
 
  -- Jaromír Mikeš <mira.mikes@seznam.cz>  Fri, 17 Jun 2016 02:04:27 +0200
 
