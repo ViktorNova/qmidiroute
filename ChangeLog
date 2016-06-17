@@ -1,3 +1,52 @@
++++ Release 0.4.0 (2016-01-24) +++
+
+2015-12-30 12:56  Guido Scholz <guido-scholz@gmx.net>
+	* configure.ac, src/Makefile.am, src/mainwindow.cpp,
+	  src/translations/qmidiroute_de.ts,
+	  src/translations/qmidiroute_fr.ts,
+	  src/translations/qmidiroute_ru.ts: Add option to use Qt5 instead
+	  of Qt4
+
+2015-12-30 12:28  Guido Scholz <guido-scholz@gmx.net>
+	* src/: mainwindow.cpp, translations/qmidiroute_de.ts,
+	  translations/qmidiroute_fr.ts, translations/qmidiroute_ru.ts: Add
+	  keyboard shortcut for 'unmatched' tab
+
+2015-12-30 12:08  Guido Scholz <guido-scholz@gmx.net>
+	* src/: mapwidget.cpp, translations/qmidiroute_de.ts: Update German
+	  translation
+
+2013-12-04 21:14  Frank Kober <goemusic@yahoo.fr>
+	* src/mapwidget.cpp: Fixed updating indexOutMode during file read
+	  again (got lost during last commit), several bug reports
+
+
+2013-04-02 Guido Scholz <guido-scholz@gmx.net>
+	* mapwidget.cpp: Fix parameter setting during file loading.
+
+2011-05-03  Frank Kober  <goemusic@yahoo.fr>
+	* qmidiroute.svg, qmidiroute.desktop: added
+	* Makefile.am: new files added to install items
+
+2011-04-24 Nikita Zlobin <cook60020tmp@mail.ru>
+	* mainwindow.cpp: Naming changed from "route" to "rule" when meaning
+	a single tab
+	* translations/qmidiroute_ru.ts: updated
+
+2011-04-23  Frank Kober  <goemusic@yahoo.fr>
+	* translations/qmidiroute_ru.ts, Makefile.am: Russian translation 
+	thankfully added, was provided by Nikita Zlobin.
+
+2010-07-14  Frank Kober  <goemusic@yahoo.fr>
+	* mapwidget.cpp: Fixed midimap update for IndexOutMode while qmr 
+	file is read (Fixes AMS Bug #3028929)
+
+2010-01-08 Guido Scholz <guido.scholz@bayernline.de>
+	* mainwindow.*: Handler for SIGINT added to handle unsaved or
+	changed files more carefully at program termination. Handler for
+	SIGUSR1 added to provide support for LADISH level 1.
+
+
 +++ Release 0.3.0 (2009-09-20) +++
 
 2009-09-20 Guido Scholz <guido.scholz@bayernline.de>

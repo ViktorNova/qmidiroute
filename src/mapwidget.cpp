@@ -6,7 +6,7 @@
 #include "mapwidget.h"
 
 
-    MapWidget::MapWidget(MidiMap *p_midiMap, int portCount, QWidget *parent)
+MapWidget::MapWidget(MidiMap *p_midiMap, int portCount, QWidget *parent)
 : QWidget(parent), midiMap(p_midiMap), modified(false)
 {
     QStringList typeNames; 
@@ -491,9 +491,11 @@ void MapWidget::readMap(QTextStream& mapText)
     qs2 = qs.section(' ', 0, 0); 
     typeIn->setCurrentIndex(qs2.toInt());
     updateTypeIn(qs2.toInt());
+
     qs2 = qs.section(' ', 1, 1);
     typeOut->setCurrentIndex(qs2.toInt());
     updateTypeOut(qs2.toInt());
+
     qs = mapText.readLine();
     qs2 = qs.section(' ', 0, 0); 
     chIn[0]->setValue(qs2.toInt() + 1);
@@ -501,6 +503,7 @@ void MapWidget::readMap(QTextStream& mapText)
     chIn[1]->setValue(qs2.toInt() + 1);
     qs2 = qs.section(' ', 2, 2);
     int chOutTemp = qs2.toInt();
+
     qs = mapText.readLine();
     qs2 = qs.section(' ', 0, 0); 
     indexIn[0]->setValue(qs2.toInt());
@@ -508,6 +511,7 @@ void MapWidget::readMap(QTextStream& mapText)
     indexIn[1]->setValue(qs2.toInt());
     qs2 = qs.section(' ', 2, 2);
     indexOut->setValue(qs2.toInt());
+
     qs = mapText.readLine();
     qs2 = qs.section(' ', 0, 0); 
     rangeIn[0]->setValue(qs2.toInt());
@@ -517,15 +521,10 @@ void MapWidget::readMap(QTextStream& mapText)
     rangeOut[0]->setValue(qs2.toInt());
     qs2 = qs.section(' ', 3, 3);
     rangeOut[1]->setValue(qs2.toInt());
+
     qs = mapText.readLine();
     qs2 = qs.section(' ', 0, 0);
     chOutMode->setCurrentIndex(qs2.toInt());
-    updateChOutMode(qs2.toInt());
-    qs2 = qs.section(' ', 1, 1); 
-    indexOutMode->setCurrentIndex(qs2.toInt());
-    qs = mapText.readLine();
-    qs2 = qs.section(' ', 0, 0); 
-    portOut->setValue(qs2.toInt() + 1);
 
     switch (chOutMode->currentIndex()) {
         case 0: // Offset
@@ -538,6 +537,16 @@ void MapWidget::readMap(QTextStream& mapText)
             chOut->setValue(chOutTemp + 1);
             break;
     }
+    updateChOutMode(chOutMode->currentIndex());
+
+    qs2 = qs.section(' ', 1, 1); 
+    indexOutMode->setCurrentIndex(qs2.toInt());
+    updateIndexOutMode(indexOutMode->currentIndex());
+    
+    qs = mapText.readLine();
+    qs2 = qs.section(' ', 0, 0); 
+    portOut->setValue(qs2.toInt() + 1);
+
     modified = false;
 }                                      
 
