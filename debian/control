@@ -7,7 +7,9 @@ Build-Depends: debhelper (>= 9),
  dh-autoreconf,
  pkg-config,
  libjack-dev,
- libqt4-dev,
+ qtbase5-dev,
+ qttools5-dev-tools,
+ libqt5opengl5-dev,
  libasound2-dev
 Standards-Version: 3.9.8
 Vcs-Git: https://anonscm.debian.org/git/pkg-multimedia/qmidiroute.git
