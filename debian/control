@@ -12,8 +12,8 @@ Build-Depends: debhelper (>= 9),
  libqt5opengl5-dev,
  libasound2-dev
 Standards-Version: 3.9.8
-Vcs-Git: https://anonscm.debian.org/git/pkg-multimedia/qmidiroute.git
-Vcs-Browser: https://anonscm.debian.org/cgit/pkg-multimedia/qmidiroute.git
+Vcs-Git: https://salsa.debian.org/multimedia-team/qmidiroute.git
+Vcs-Browser: https://salsa.debian.org/multimedia-team/qmidiroute
 Homepage: http://alsamodular.sourceforge.net/
 
 Package: qmidiroute
