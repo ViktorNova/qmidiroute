@@ -2,6 +2,16 @@
 
 #include "seqdriver.h"
 #include "config.h"
+#include "mainwindow.h"
+
+extern QString portName; // This is where we get the file name from main.cpp
+QByteArray byteArray;
+const char *thePortName;
+
+QByteArray in("IN - ");
+QByteArray out("OUT - ");
+const char * portName_in;
+const char * portName_out;
 
 
 SeqDriver::SeqDriver(QList<MidiMap *> *p_midiMapList, QWidget *parent)
@@ -14,15 +24,20 @@ SeqDriver::SeqDriver(QList<MidiMap *> *p_midiMapList, QWidget *parent)
     discardUnmatched = true;
     portUnmatched = 0;
     clientid = -1;
-    
+
+    in.append(portName) ;
+    out.append(portName) ;
+    byteArray = portName.toUtf8();
+    thePortName = byteArray.constData();  // Converts the QString into const *char
+
     err = snd_seq_open(&seq_handle, "hw", SND_SEQ_OPEN_DUPLEX, 0);
     if (err < 0) {
         qWarning("Error opening ALSA sequencer (%s).", snd_strerror(err));
         exit(1);
     }
-    snd_seq_set_client_name(seq_handle, PACKAGE);
+    snd_seq_set_client_name(seq_handle, thePortName);
     clientid = snd_seq_client_id(seq_handle);
-    portid_in = snd_seq_create_simple_port(seq_handle, "in",
+    portid_in = snd_seq_create_simple_port(seq_handle, thePortName,
                     SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE,
                     SND_SEQ_PORT_TYPE_APPLICATION);
     if (portid_in < 0) {

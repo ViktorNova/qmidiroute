@@ -4,6 +4,13 @@ Qt4-port 2009 by Frank Kober
 QMidiRoute is released under GNU General Public License (refer to LICENSE file)
 --------------------------------------------------------------------------
 
+Note from ViktorNova: This fork of QMidiRoute makes it more session-manager 
+friendly - you can have multiple instances running simultaneously in a session
+manager and have it not auto-connect the wrong ports. MIDI in/out ports are now
+namespaced according to the filename of the file that is opened, rather than the
+previous behaviour of appending the random ALSA client numbers to the port names.
+There are also some graphical updates.
+
 QMidiRoute is a MIDI event router and filter. MIDI note, control change,
 program change and pitch bend events are logged, and can be filtered, 
 redirected and transformed into other events according to MIDI maps 
@@ -28,9 +35,9 @@ qmidiroute uses autoconf/automake as build system. For short
 does the trick. Please refer to the INSTALL file for more information.
 
 
-CVS check out
+Building from GIT
 -------------
-If you start with a fresh CVS checkout, please first apply
+If you start with a fresh GIT clone, please first apply
 
   autoreconf -i
 

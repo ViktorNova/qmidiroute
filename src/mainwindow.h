@@ -10,12 +10,12 @@
 #include <QString>
 #include <QTabWidget>
 
+
 #include "mapwidget.h"
 #include "logwidget.h"
 #include "mapdata.h"
 #include "passwidget.h"
 #include "config.h"
-
 
 static const char ABOUTMSG[] = APP_NAME " " PACKAGE_VERSION "\n"
                           "(C) 2002-2003 Matthias Nagorni (SuSE AG Nuremberg)\n"
@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow
     LogWidget *logWidget;
     PassWidget *passWidget;
     QString lastDir, filename;
-
+ 
     void chooseFile();
     void clear();
     bool isSave();

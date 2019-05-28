@@ -11,7 +11,6 @@
 #include "main.h"
 #include "mapwidget.h"
 
-
 class SeqDriver : public QWidget {
     
   Q_OBJECT
@@ -29,6 +28,7 @@ class SeqDriver : public QWidget {
     void initSeqNotifier();  
         
   public:
+
     bool discardUnmatched;
     int portUnmatched;
 
@@ -40,7 +40,7 @@ class SeqDriver : public QWidget {
     bool isModified();
     void setModified(bool);
     int getAlsaClientId();
-
+    
   signals:
     void midiEvent(snd_seq_event_t *ev);
 

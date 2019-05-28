@@ -1,5 +1,6 @@
 #include <QLabel>
 #include <QFile>
+#include <QFileInfo>
 #include <QDir>
 #include <QDockWidget>
 #include <QFileDialog>
@@ -15,7 +16,6 @@
 #include <csignal>  // for sigaction()
 #include <cstring>  // for strerror()
 #include <unistd.h> // for pipe()
-
 
 #include "mapdata.h"
 #include "logwidget.h"
@@ -35,6 +35,8 @@
 
 static const char FILEEXT[] = ".qmr";
 
+extern QString portName;
+QString filename_stripped;
 
 int MainWindow::sigpipe[2];
 
@@ -155,27 +157,57 @@ MainWindow::MainWindow(int p_portCount)
     menuBar->addMenu(mapMenu);
     menuBar->addMenu(helpMenu);
 
-    QToolBar *toolBar = new QToolBar(tr("&Toolbar"), this);
+// Spacer widgets to center the toolbar buttons - thanks https://qt-project.org/forums/viewthread/42773
+// There might be a better way to do this
+
+    QWidget *spacerWidget = new QWidget(this);
+        spacerWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+        spacerWidget->setVisible(true);
+
+    QWidget *spacerWidget2 = new QWidget(this);
+        spacerWidget2->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+        spacerWidget2->setVisible(true);
+
+/*  I disabled this because it clutters up the interface and is not necessary in a session manager environment
+
+    QToolBar *toolBar = new QToolBar(tr("&File Buttons"), this);
     toolBar->addAction(fileNewAction);    
     toolBar->addAction(fileOpenAction);    
     toolBar->addAction(fileSaveAction);    
     toolBar->addAction(fileSaveAsAction);
-    toolBar->addSeparator();
-    toolBar->addAction(mapNewAction);
-    toolBar->addAction(mapCloneAction);
-    toolBar->addAction(mapRenameAction);
-    toolBar->addAction(mapDeleteAction);
     toolBar->setFloatable(false);
+    toolBar->setIconSize( QSize( 48, 48 ) );
+*/
+    QToolBar *toolBar2 = new QToolBar(tr("&MIDI Rules Buttons"), this);
+    toolBar2->addWidget(spacerWidget);
+    toolBar2->addAction(mapNewAction);
+    toolBar2->addAction(mapCloneAction);
+    toolBar2->addAction(mapRenameAction);
+    toolBar2->addAction(mapDeleteAction);
+    toolBar2->setFloatable(false);
+    toolBar2->setIconSize( QSize( 48, 48 ) );
+    toolBar2->addWidget(spacerWidget2);   
 
+
+
+/*
     QAction* viewToolbarAction = toolBar->toggleViewAction();
     viewToolbarAction->setShortcut(QKeySequence(tr("Ctrl+T", "View|Toolbar")));
-    viewToolbarAction->setToolTip(tr("Show/hide toolbar"));
+    viewToolbarAction->setToolTip(tr("Show/hide file buttons"));
     viewMenu->addAction(viewToolbarAction);
+*/
+
+    QAction* viewToolbar2Action = toolBar2->toggleViewAction();
+    viewToolbar2Action->setShortcut(QKeySequence(tr("Ctrl+M", "View|Toolbar")));
+    viewToolbar2Action->setToolTip(tr("Show/hide MIDI rules buttons"));
+    viewMenu->addAction(viewToolbar2Action);
+
     viewMenu->addAction(viewLogAction);
-
+    
     setMenuBar(menuBar);
-    addToolBar(toolBar);
-
+//    addToolBar(toolBar);
+    addToolBar(toolBar2);
+    
     setCentralWidget(tabWidget);
     setWindowIcon(QPixmap(qmidiroute_48_xpm));
     updateWindowTitle();
@@ -194,15 +226,19 @@ MainWindow::~MainWindow()
 void MainWindow::updateWindowTitle()
 {
     if (filename.isEmpty())
-        setWindowTitle(QString("%1 (%2)")
-                .arg(APP_NAME)
-                .arg(mapData->getAlsaClientId()));
+        setWindowTitle(QString("MIDI Map - "));
     else
-        setWindowTitle(QString("%1 - %2 (%3)")
-                .arg(filename)
-                .arg(APP_NAME)
-                .arg(mapData->getAlsaClientId()));
+        setWindowTitle(QString("MIDI Map - %1")
+                .arg(filename_stripped));
+        QFileInfo fi(filename);
+        filename_stripped = fi.baseName();
+
+        setWindowTitle(QString("MIDI Map - %1")
+                .arg(filename_stripped));
+
 }
+
+
 
 void MainWindow::helpAbout()
 {

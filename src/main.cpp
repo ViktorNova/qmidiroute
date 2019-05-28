@@ -10,6 +10,8 @@
 #include "mainwindow.h"
 #include "main.h"
 
+QString portName;
+char** g_argv;
 
 static struct option options[] = {
     {"help", 0, 0, 'h'},
@@ -25,6 +27,9 @@ int main(int argc, char *argv[])
     int option_index; 
     int portCount = 2;
     QTextStream out(stdout);
+    g_argv = argv;
+    QFileInfo fi(g_argv[optind]);
+    portName = fi.baseName();
 
     while ((getopt_return = getopt_long(argc, argv, "vhp:", options,
                     &option_index)) >= 0) {
@@ -78,9 +83,13 @@ int main(int argc, char *argv[])
             qmidiroute->openFile(fi.absoluteFilePath());
         else
             qWarning("File not found: %s", argv[optind]);
-    }
 
+    }
+    
     int result = app.exec();
     delete qmidiroute;
     return result;
+
+
 }
+    

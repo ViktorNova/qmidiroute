@@ -6,9 +6,9 @@
 #include <qmessagebox.h>
 #include <alsa/asoundlib.h>
 
+#include "mainwindow.h"
 #include "seqdriver.h"
 #include "mapdata.h"
-
 
 MapData::MapData(QWidget *parent) : QWidget(parent), modified(false)
 {
