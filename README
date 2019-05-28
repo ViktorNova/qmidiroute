@@ -2,13 +2,14 @@
 QMidiRoute (C) 2003 by Matthias Nagorni
 Qt4-port 2009 by Frank Kober
 QMidiRoute is released under GNU General Public License (refer to LICENSE file)
+Forked from Debian - https://salsa.debian.org/multimedia-team/qmidiroute
 --------------------------------------------------------------------------
 
 Note from ViktorNova: This fork of QMidiRoute makes it more session-manager 
 friendly - you can have multiple instances running simultaneously in a session
 manager and have it not auto-connect the wrong ports. MIDI in/out ports are now
-namespaced according to the filename of the file that is opened, rather than the
-previous behaviour of appending the random ALSA client numbers to the port names.
+namespaced according to the filename of the .qma file that is opened, rather than
+the previous behaviour of appending the random ALSA client numbers to the port names.
 There are also some graphical updates.
 
 QMidiRoute is a MIDI event router and filter. MIDI note, control change,
