@@ -25,8 +25,12 @@ QMidiRoute can be started using the following options:
    --file <filename>         Open Map File <filename>
 
 
-Installation
--------------
+##Building - Debian/Ubuntu
+Simply run
+````dpkg-buildpackage -b -rfakeroot -us -uc````
+in the root directory. Packages will be built one level up
+
+##Building - Other Linux OS
 qmidiroute uses autoconf/automake as build system. For short
 
   ./configure
